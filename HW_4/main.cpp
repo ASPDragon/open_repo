@@ -26,7 +26,9 @@ void TaskOne() {
 
 void TaskTwo() {
     std::cout << "\n\tTask #2" << std::endl;
-    std::vector<double> signal {10.5, 11.2, 25.1, 7.8, 3.6};
+    std::vector<double> signal;
+    signal.resize(100);
+    fillRandTDbl(signal);
     printContainerT(signal);
     std::cout << "The error of a signal is: " << DigitalSignalErr(signal) << std::endl;
 }

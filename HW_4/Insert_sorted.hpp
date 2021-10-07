@@ -12,10 +12,18 @@ void fillRandT(T& container) {
 }
 
 template<typename T>
+void fillRandTDbl(T& container) {
+    std::random_device random;
+    std::mt19937_64 mt {random()};
+    std::uniform_real_distribution dist {0.0, 1000.0};
+    auto gen = [&]() {return dist(mt); };
+    std::generate(container.begin(), container.end(), gen);
+}
+
+template<typename T>
 void insert_sorted(T& container, typename T::value_type const&& val) {
     auto iter = lower_bound(container.begin(), container.end(), val);
-    if (iter != container.end())
-        container.insert(iter, val);
+    container.insert(iter, val);
 }
 
 template<typename T>
