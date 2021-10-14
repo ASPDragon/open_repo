@@ -96,6 +96,8 @@ void IBroughtSomeItemsAtHome(std::vector<int>& cont) {
         cont.push_back(item);
         std::cout << "Day " << day++ << " The fair owner brought home " << item << '$' << std::endl;
         std::sort(std::execution::par, cont.begin(), cont.end());
+        if (day == 20)
+            break;
         m1.unlock();
         std::this_thread::sleep_for(1ms);
     }
@@ -130,9 +132,10 @@ void TimeToMakeSomeMoney(std::vector<int>& cont) {
         m2.lock();
         stolen = *std::find(cont.begin(), cont.end(), max);
         cont.pop_back();
-        std::cout << "Day " << day << " "  << "Our Thief has just executed a successful raid on the apartment and took "
+        std::cout << "Day " << day++ << " "  << "Our Thief has just executed a successful raid on the apartment and took "
                   << stolen << "$" << std::endl;
-        day++;
+        if (day == 20)
+            break;
         m2.unlock();
         std::this_thread::sleep_for(5ms);
     }
