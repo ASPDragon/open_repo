@@ -16,7 +16,7 @@ using std::chrono_literals::operator""ms;
 void pcout(std::string str) {
     std::lock_guard<std::mutex> lg(mut);
     std::cout << "Start thread: " << '"' <<  str << '"' << " ";
-    std::this_thread::sleep_for(100ms);
+    std::this_thread::sleep_for(30ms);
     std::cout << "Stop thread" << std::endl;
 }
 
@@ -29,6 +29,7 @@ void PrimeArr(std::array<int, SZ>& arr) {
     for (size_t i = 4; i < SZ; ++i) {
         bool isPrime = true;
         for (size_t j = 0; j < capacity; ++j) {
+            std::thread th1;
             if (i % arr[j] == 0) {
                 isPrime = false;
                 break;
@@ -55,7 +56,7 @@ void PrintSieve(std::array<int, SZ>& arr) {
 }
 
 void PrintNumber(std::array<int, SZ>& arr, size_t ind) {
-    std::lock_guard<std::mutex> lg(mut);
+    std::scoped_lock lg(mut);
     std::this_thread::sleep_for(100ms);
     constexpr int INDEX_ARITHMETICS = 1;
     std::cout << ind << "th Prime Number is: " << arr[ind - INDEX_ARITHMETICS] << std::endl;
@@ -76,21 +77,28 @@ void NPrime(int number) {
 std::mutex m1;
 std::mutex m2;
 
-template<typename T>
-void FillRandT(T& container) {
-    std::random_device random;
-    std::mt19937_64 mt {random()};
-    std::uniform_int_distribution<int> dist {0, 10000};
-    auto gen = [&]() {return dist(mt); };
-    std::generate(std::execution::par, container.begin(), container.end(), gen);
-}
+//template<typename T>
+//void PushRandT(T& container) {
+//    std::random_device random;
+//    std::mt19937_64 mt {random()};
+//    std::uniform_int_distribution<int> dist {0, 10000};
+//    auto gen = [&]() {return dist(mt); };
+//    container.push_back(gen);
+//}
 
 void IBroughtSomeItemsAtHome(std::vector<int>& cont) {
+    srand(time(NULL));
     size_t SZ = 20;
-    std::scoped_lock l1 { m1, m2 };
-    cont.resize(SZ);
-    std::this_thread::sleep_for(50ms);
-    FillRandT(cont);
+    int day = 1;
+    while (cont.size() < SZ) {
+        m1.lock();
+        int item = rand() % 10000;
+        cont.push_back(item);
+        std::cout << "Day " << day++ << " The fair owner brought home " << item << '$' << std::endl;
+        std::sort(std::execution::par, cont.begin(), cont.end());
+        m1.unlock();
+        std::this_thread::sleep_for(1ms);
+    }
 }
 
 int FindMax(std::vector<int> cont) {
@@ -103,30 +111,30 @@ int FindMax(std::vector<int> cont) {
     return max;
 }
 
-//std::vector<int>::iterator LinearSearch(std::vector<int> cont, int value) {
-//    auto it { cont.begin() };
-//    while (it != cont.end() && *it != value) {
-//        it++;
-//    }
-//    if (it != cont.end())
-//        return it;
-//    else
-//        return cont.end();
-//}
+std::vector<int>::iterator LinearSearch(std::vector<int> cont, int value) {
+    auto it { cont.begin() };
+    while (it != cont.end() && *it != value) {
+        it++;
+    }
+    if (it != cont.end())
+        return it;
+    else
+        return cont.end();
+}
 
 void TimeToMakeSomeMoney(std::vector<int>& cont) {
-    std::scoped_lock l2 { m2, m1 };
-    std::sort(std::execution::par, cont.begin(), cont.end());
     int day = 1;
+    int max = FindMax(cont);
+    int stolen = 0;
     while (!cont.empty()) {
-        int max = FindMax(cont);
-        int stolen = 0;
-        std::this_thread::sleep_for(50ms);
+        m2.lock();
         stolen = *std::find(cont.begin(), cont.end(), max);
         cont.pop_back();
         std::cout << "Day " << day << " "  << "Our Thief has just executed a successful raid on the apartment and took "
                   << stolen << "$" << std::endl;
         day++;
+        m2.unlock();
+        std::this_thread::sleep_for(5ms);
     }
 }
 
@@ -154,10 +162,10 @@ void TaskTwo() {
 
 void TaskThree() {
     std::cout << "\tTask #3" << std::endl;
-    std::vector<int> vec;
-    std::thread Owner { IBroughtSomeItemsAtHome, std::ref(vec) };
+    std::vector<int> possession {100, 800, 9000, 1098, 587, 876, 4242, 7654, 2442};
+    std::thread Owner { IBroughtSomeItemsAtHome, std::ref(possession) };
+    std::thread Thief { TimeToMakeSomeMoney, std::ref(possession) };
     Owner.join();
-    std::thread Thief { TimeToMakeSomeMoney, std::ref(vec) };
     Thief.join();
 }
 
