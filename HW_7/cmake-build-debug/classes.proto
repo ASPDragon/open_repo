@@ -1,0 +1,19 @@
+syntax="proto3";
+
+package foo.bar;
+
+message FullName {
+    string name = 1;
+    string surname = 2;
+    optional string patronimic = 3;
+};
+
+message Student {
+    FullName full_name = 1;
+    repeated int32 grades = 2;
+    double GPA = 3;
+};
+
+message StudentsGroup {
+    repeated Student student = 1;
+};
