@@ -330,16 +330,30 @@ private:
 //    size_t capacity_ = MAX_CAPACITY;
 //};
 
-void cyclicIntArrInsert(int* arr, const size_t size, const size_t index, int val) {
-    if (index < size)
-        arr[index] = val;
+template<class T>
+class ArrayBuf {
+private:
+    static constexpr size_t SZ = 5;
+    std::array<T, SZ> arr_;
+public:
+    ArrayBuf(std::array<T, SZ> arr) : arr_(arr) {}
+
+    void cyclicIntArrInsert(const size_t index, T val);
+    void print();
+};
+
+template<class T>
+void ArrayBuf<T>::cyclicIntArrInsert(const size_t index, T val) {
+    if (index < SZ)
+        arr_[index] = val;
     else
-        arr[arr[size - 1] % size] = val;
+        arr_[arr_[SZ - 1] % SZ] = val;
 }
 
-void print(int* arr, const size_t size) {
-    for (size_t i = 0; i < size; ++i)
-        std::cout << arr[i] << (i == size - 1? "" : ", ");
+template<class T>
+void ArrayBuf<T>::print() {
+    for (size_t i = 0; i < SZ; ++i)
+        std::cout << arr_[i] << (i == SZ - 1? "" : ", ");
     std::cout << std::endl;
 }
 
@@ -366,15 +380,16 @@ void TaskTwo() {
 //    lst.push_back(50);
 //    lst.print();
     std::cout << "\nArray implementation: " << std::endl;
-    int array[SZ];
-    cyclicIntArrInsert(array, SZ, 0, 10);
-    cyclicIntArrInsert(array, SZ, 1, 20);
-    cyclicIntArrInsert(array, SZ, 2, 30);
-    cyclicIntArrInsert(array, SZ, 3, 40);
-    cyclicIntArrInsert(array, SZ, 4, 50);
-    print(array, SZ);
-    cyclicIntArrInsert(array, SZ, 5, 60);
-    print(array, SZ);
+    std::array<int, SZ> arr;
+    ArrayBuf buf(arr);
+    buf.cyclicIntArrInsert(0, 10);
+    buf.cyclicIntArrInsert(1, 20);
+    buf.cyclicIntArrInsert(2, 30);
+    buf.cyclicIntArrInsert(3, 40);
+    buf.cyclicIntArrInsert(4, 50);
+    buf.print();
+    buf.cyclicIntArrInsert(5, 60);
+    buf.print();
 }
 
 // Task 3: Write the fastest sorting function
