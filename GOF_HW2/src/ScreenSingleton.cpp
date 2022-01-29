@@ -15,6 +15,7 @@
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <thread>
 #endif
 
 //
@@ -120,6 +121,8 @@ void ScreenSingleton::SetColor(ConsoleColor color) {
 #else
 
 void ScreenSingleton::ClrScr() {
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(100ms);
   system("clear");
 }
 
