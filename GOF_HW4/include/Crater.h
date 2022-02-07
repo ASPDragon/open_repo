@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObject.h"
+#include "enums/CraterSize.h"
 
 class AbstractCrater : public GameObject {
 public:

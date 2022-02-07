@@ -1,7 +1,7 @@
 #include "Crater.h"
 #include "ScreenSingleton.h"
 #include <iostream>
-#include "enums/CraterSize.h"
+
 
 bool AbstractCrater::isInside(double xn) const {
     const double size_2 = width / 2.0;

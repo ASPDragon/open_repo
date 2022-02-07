@@ -35,7 +35,7 @@ SBomber::SBomber(bool _withChimney, bool _smallWindow, bool _isWinter)
     if (isWinter)
         pGr = new WinterGround;
     else
-        pGr = new WinterGround;
+        pGr = new CommonGround;
     const uint16_t groundY = maxY - 5;
     pGr->SetPos(offset + 1, groundY);
     pGr->SetWidth(width - 2);

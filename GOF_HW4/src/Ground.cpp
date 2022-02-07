@@ -58,6 +58,7 @@ bool Ground::isInsideAnyCrater(double x) const {
 void Ground::AddCrater(double xn) {
     AbstractCrater* crater = CreateCrater();
     crater->SetPos(int(xn), y);
+    crater->SetWidth(size);
     vecCrates.push_back(crater);
 }
 
