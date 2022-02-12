@@ -115,10 +115,15 @@ void SBomber::CheckBombsAndGround() {
     std::vector<Bomb*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
-    for (size_t i = 0; i < vecBombs.size(); i++) {
+    for (size_t i = 0; i < vecBombs.size(); ++i) {
         if (vecBombs[i]->GetY() >= y) {
             pGround->AddCrater(vecBombs[i]->GetX());
-            CheckDestoyableObjects(vecBombs[i]);
+            DestroyableGroundObject* object = vecBombs[i]->CheckDestroyableObjects();
+            if (object != nullptr) {
+                score += object->GetScore();
+                DeleteStaticObj(object);
+            }
+            delete object;
             DeleteDynamicObj(vecBombs[i]);
         }
     }
@@ -291,6 +296,12 @@ void SBomber::DropBomb() {
         pBomb->SetSpeed(2);
         pBomb->SetPos(x, y);
         pBomb->SetWidth(SMALL_CRATER_SIZE);
+
+        for (auto& object : vecStaticObj) {
+            DestroyableGroundObject* destroyableObj = dynamic_cast<DestroyableGroundObject*>(object);
+            if (destroyableObj != nullptr)
+                pBomb->AddObserver(destroyableObj);
+        }
 
         vecDynamicObj.push_back(pBomb);
         bombsNumber--;

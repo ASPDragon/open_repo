@@ -7,7 +7,7 @@
 
 using namespace std;
 
-bool Tank::isInside(double x1, double x2) const
+bool Tank::HandleInsideCheck(double x1, double x2) const
 {
 	const double XBeg = x + 2;
 	const double XEnd = x + width - 1;
