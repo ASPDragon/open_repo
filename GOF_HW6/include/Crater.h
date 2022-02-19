@@ -6,5 +6,5 @@ class Crater : public GameObject {
 public:
   bool isInside(double xn) const;
 
-  virtual void Draw() const override;
+  virtual void Draw() override;
 };

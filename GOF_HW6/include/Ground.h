@@ -8,7 +8,7 @@
 class Ground : public GameObject {
 public:
   Ground() = default;
-  void Draw() const override;
+  void Draw() override;
 
   void AddCrater(double xn);
 

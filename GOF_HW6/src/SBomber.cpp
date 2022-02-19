@@ -15,7 +15,8 @@ SBomber::SBomber()
     fps(0), bombsNumber(10), score(0) {
   MyTools::WriteToLog(std::string(__func__) + " was invoked");
 
-  Plane* p = new Plane;
+  Plane* p;
+  p = new BigPlane();
   p->SetDirection(1, 0.1);
   p->SetSpeed(4);
   p->SetPos(5, 10);
@@ -33,6 +34,7 @@ SBomber::SBomber()
   pGUI->SetFinishX(offset + width - 4);
   vecStaticObj.push_back(pGUI);
 
+  Controller* controller = new Controller(pGUI);
   Ground* pGr = new Ground;
   const uint16_t groundY = maxY - 5;
   pGr->SetPos(offset + 1, groundY);
@@ -42,11 +44,13 @@ SBomber::SBomber()
   Tank* pTank = new Tank;
   pTank->SetWidth(13);
   pTank->SetPos(30, groundY - 1);
+  pTank->SetController(controller);
   vecStaticObj.push_back(pTank);
 
   pTank = new Tank;
   pTank->SetWidth(13);
   pTank->SetPos(50, groundY - 1);
+  pTank->SetController(controller);
   vecStaticObj.push_back(pTank);
 
   House* pHouse = new House;

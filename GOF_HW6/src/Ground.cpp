@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstring>
 
-void Ground::Draw() const
+void Ground::Draw()
 {
     ScreenSingleton::getInstance().SetColor(CC_Green);
 

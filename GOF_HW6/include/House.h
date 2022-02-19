@@ -11,7 +11,7 @@ public:
     return score;
   }
 
-  void Draw() const override;
+  void Draw() override;
 
 private:
   const uint16_t score = 40;

@@ -26,7 +26,7 @@ bool House::isInside(double x1, double x2) const
 	return false;
 }
 
-void House::Draw() const
+void House::Draw()
 {
 	ScreenSingleton::getInstance().SetColor(CC_Yellow);
 	ScreenSingleton::getInstance().GotoXY(x, y - 5);

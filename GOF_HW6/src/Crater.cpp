@@ -3,7 +3,7 @@
 #include <iostream>
 #include "enums/CraterSize.h"
 
-void Crater::Draw() const {
+void Crater::Draw() {
   if (width == SMALL_CRATER_SIZE) {
     ScreenSingleton::getInstance().GotoXY(x - 4, y + 1);
     std::cout << "==     ==";
