@@ -2,7 +2,7 @@
 #include <cstdint>
 #include "enums/ConsoleColors.h"
 
-class SBomber;
+class FileLogger;
 
 class IScreen {
 public:
@@ -12,6 +12,7 @@ public:
   virtual uint16_t GetMaxX() = 0;
   virtual uint16_t GetMaxY() = 0;
   virtual void SetColor(ConsoleColor color) = 0;
+  virtual void SetLogger(FileLogger* _logger) = 0;
 };
 
 class ScreenSingleton : public IScreen {
@@ -23,9 +24,11 @@ public:
   virtual uint16_t GetMaxX() override;
   virtual uint16_t GetMaxY() override;
   virtual void SetColor(ConsoleColor color) override;
+  void SetLogger(FileLogger* _logger) override;
 
 private:
   friend IScreen& getInternalInstance();
+  FileLogger* logger;
 
   ScreenSingleton() = default;
   ~ScreenSingleton() = default;

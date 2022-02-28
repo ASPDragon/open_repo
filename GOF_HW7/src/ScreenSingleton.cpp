@@ -30,46 +30,59 @@ IScreen& getInternalInstance() {
 //
 //
 
+
 class ScreenSingletonProxy : public IScreen {
 public:
-  virtual void ClrScr() override {
-    MyTools::WriteToLog("ClrScr invoke begin");
-    getInternalInstance().ClrScr();
-    MyTools::WriteToLog("ClrScr invoke end");
-  }
-  virtual void GotoXY(double x, double y) override {
+    virtual void ClrScr() override {
+        logger->WriteToLog("ClrScr invoke begin");
+        getInternalInstance().ClrScr();
+        logger->WriteToLog("ClrScr invoke end");
+    }
 
-    MyTools::WriteToLog("GotoXY invoke begin");
-    getInternalInstance().GotoXY(x, y);
-    MyTools::WriteToLog("GotoXY invoke end");
-  }
-  virtual uint16_t GetMaxX() override {
-    return getInternalInstance().GetMaxX();
-  }
+    virtual void GotoXY(double x, double y) override {
 
-  virtual uint16_t GetMaxY() override {
-    return getInternalInstance().GetMaxY();
-  }
-  virtual void SetColor(ConsoleColor color) override {
-    return getInternalInstance().SetColor(color);
-  }
+        logger->WriteToLog("GotoXY invoke begin");
+        getInternalInstance().GotoXY(x, y);
+        logger->WriteToLog("GotoXY invoke end");
+    }
 
-  static IScreen& getInstance() {
-    static ScreenSingletonProxy theInstance;
-    return theInstance;
-  }
+    virtual uint16_t GetMaxX() override {
+        return getInternalInstance().GetMaxX();
+    }
+
+    virtual uint16_t GetMaxY() override {
+        return getInternalInstance().GetMaxY();
+    }
+
+    virtual void SetColor(ConsoleColor color) override {
+        return getInternalInstance().SetColor(color);
+    }
+
+    static IScreen &getInstance() {
+        static ScreenSingletonProxy theInstance;
+        return theInstance;
+    }
+
+    void SetLogger(FileLogger* _logger) {
+        logger = _logger;
+    }
 
 private:
-  ScreenSingletonProxy() {
-  }
+    ScreenSingletonProxy() {
+    }
 
-  ~ScreenSingletonProxy() {
-  }
+    ~ScreenSingletonProxy() {
+    }
 
-  ScreenSingletonProxy(const ScreenSingletonProxy& root) = delete;
-  ScreenSingletonProxy& operator=(const ScreenSingletonProxy&) = delete;
-  ScreenSingletonProxy(ScreenSingletonProxy&& root) = delete;
-  ScreenSingletonProxy& operator=(ScreenSingletonProxy&&) = delete;
+    ScreenSingletonProxy(const ScreenSingletonProxy &root) = delete;
+
+    ScreenSingletonProxy &operator=(const ScreenSingletonProxy &) = delete;
+
+    ScreenSingletonProxy(ScreenSingletonProxy &&root) = delete;
+
+    ScreenSingletonProxy &operator=(ScreenSingletonProxy &&) = delete;
+
+    FileLogger* logger;
 };
 
 //
@@ -196,3 +209,5 @@ void ScreenSingleton::SetColor(ConsoleColor color) {
 IScreen& ScreenSingleton::getInstance() {
   return ScreenSingletonProxy::getInstance();
 }
+
+void ScreenSingleton::SetLogger(FileLogger* _logger) { logger = _logger; }

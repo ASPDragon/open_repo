@@ -5,16 +5,9 @@
 
 class FileLogger {
 public:
-    FileLogger(const std::string& filename) {
-        file.open(filename);
-    }
+    FileLogger(const std::string& filename);
 
-    ~FileLogger() {
-        file.close();
-    }
-
-    void OpenLogFile(const std::string &FN);
-    void CloseLogFile();
+    ~FileLogger();
 
     std::string GetCurDateTime();
 
@@ -23,6 +16,5 @@ public:
     void WriteToLog(const std::string &str, double d);
 
 private:
-    std::ifstream file;
     std::ofstream logOut;
 };

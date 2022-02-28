@@ -4,8 +4,9 @@
 
 #if defined(_WIN32) || defined(WIN32)
 
-//#include <conio.h>
-//
+#include <conio.h>
+#include <iostream>
+
 #else
 
 #include <iostream>
@@ -38,25 +39,31 @@ int _kbhit() {
 
 
 int main(void) {
-  FileLogger logger("log.txt");
+    try {
+        FileLogger logger("log.txt");
 
-  SBomber game;
+        SBomber game(&logger);
 
-  do {
-    game.TimeStart();
+        do {
+            game.TimeStart();
 
-    if (_kbhit()) {
-      game.ProcessKBHit();
+            if (kbhit()) {
+                game.ProcessKBHit();
+            }
+
+            ScreenSingleton::getInstance().ClrScr();
+
+            game.DrawFrame();
+            game.MoveObjects();
+            game.CheckObjects();
+
+            game.TimeFinish();
+
+        } while (!game.GetExitFlag());
     }
 
-    ScreenSingleton::getInstance().ClrScr();
-
-    game.DrawFrame();
-    game.MoveObjects();
-    game.CheckObjects();
-
-    game.TimeFinish();
-
-  } while (!game.GetExitFlag());
-  return 0;
+    catch(std::runtime_error& reading_failure) {
+        std::cerr << "Error: " << reading_failure.what() << '\n';
+    }
+    return 0;
 }

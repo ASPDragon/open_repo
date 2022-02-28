@@ -9,12 +9,20 @@
 #include <time.h>
 #include <stdio.h>
 
-void FileLogger::OpenLogFile(const std::string &FN) { logOut.open(FN, std::ios_base::out); }
+FileLogger::FileLogger(const std::string& filename) {
+    logOut.open(filename);
 
-void FileLogger::CloseLogFile() {
-  if (logOut.is_open()) {
-    logOut.close();
-  }
+    if (logOut.is_open())
+        logOut << GetCurDateTime() << " - has begun" << std::endl;
+    else
+        throw std::runtime_error("Reading failure");
+}
+
+FileLogger::~FileLogger() {
+    if(logOut.is_open()) {
+        logOut << GetCurDateTime() << " - has done" << std::endl;
+        logOut.close();
+    }
 }
 
 std::string FileLogger::GetCurDateTime() {
