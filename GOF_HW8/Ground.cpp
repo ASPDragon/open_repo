@@ -1,17 +1,43 @@
-#include "Ground.h"
-#include "Crater.h"
-#include "ScreenSingleton.h"
-#include "enums/CraterSize.h"
-#include "MyTools.h"
 #include <iostream>
-#include <cstring>
+
+#include "MyTools.h"
+#include "Ground.h"
+
+using namespace std;
+using namespace MyTools;
+
+//==================================================================================================
+
+void Crater::Draw() const
+{
+    if (width == SMALL_CRATER_SIZE) // Рисование воронки в 9 символов шириной
+    {
+        GotoXY(x - 4, y + 1);
+        cout << "==     ==";
+        GotoXY(x - 2, y + 2);
+        cout << "=====";
+    }
+}
+
+bool Crater::isInside(double xn) const
+{
+    const double size_2 = width / 2.0;
+    if (int(xn) > int(x - size_2) && xn <= int(x + size_2))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+//==================================================================================================
 
 void Ground::Draw() const
 {
-    ScreenSingleton::getInstance().SetColor(CC_Green);
+    MyTools::SetColor(CC_Green);
 
     const size_t bufSize = width + 1;
-    char* buf = new (std::nothrow) char[bufSize];
+    char* buf = new (nothrow) char[bufSize];
     if (buf == nullptr)
     {
         return;
@@ -19,10 +45,10 @@ void Ground::Draw() const
 
     if (vecCrates.size() == 0)
     {
-        ScreenSingleton::getInstance().GotoXY(x, y);
+        GotoXY(x, y);
         memset(buf, '=', bufSize);
         buf[bufSize - 1] = '\0';
-        std::cout << buf;
+        cout << buf;
     }
     else
     {
@@ -34,9 +60,9 @@ void Ground::Draw() const
             buf[i - X] = c;
         }
 
-        ScreenSingleton::getInstance().GotoXY((double)X, y);
+        GotoXY((double)X, y);
         buf[bufSize-1] = '\0';
-        std::cout << buf;
+        cout << buf;
 
         for (size_t i = 0; i < vecCrates.size(); i++)
         {
